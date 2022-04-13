@@ -1,0 +1,21 @@
+{% extends 'login.html' %}
+{% block loginpage %}
+  <form>
+  <center>  <span><i class='fa fa-twitter fa-4x'></i></span></center><br><br>
+   {% for data in form %}
+  <div class="user-box">
+        {{data.label}}
+      {{ data }}
+
+  </div>
+    {% endfor %}
+    <button href="#" type="button">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      Submit
+    </button>
+    &nbsp;<a href="{% url 'user_login' %}" style="color:white;">Existing User? Signin</a>
+  </form>
+{% endblock %}
