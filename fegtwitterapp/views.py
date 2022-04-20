@@ -12,7 +12,6 @@ from fegtwitterapp.forms import RegistrationForm, PostForm, UpdatePostForm
 from fegtwitterapp.models import User, UserTweet
 
 
-
 class HomePage(LoginRequiredMixin, ListView):
     model = UserTweet
     template_name = "index.html"
@@ -92,6 +91,3 @@ class MyTweetDeleteView(DeleteView):
         return super(MyTweetDeleteView, self).delete(request, *args)
 
 
-# from django.contrib.auth import get_user_model
-# User = get_user_model()
-# users = User.objects.all()

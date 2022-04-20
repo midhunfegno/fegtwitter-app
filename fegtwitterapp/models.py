@@ -5,13 +5,14 @@ from django.db import models
 
 
 class User(AbstractUser):
-    user = models.ManyToManyField('self', blank=True)
-    followers = models.ManyToManyField('self', blank=True)
+    followers = models.ManyToManyField('self', blank=True, null=True, related_name='following')
     fullname = models.CharField(max_length=100, blank=True, null=True)
     email = models.EmailField(unique=True, null=True, blank=True)
     follower_count = models.IntegerField(default=0, blank=True, null=True)
     following_count = models.IntegerField(default=0, blank=True, null=True)
     tweet_count = models.IntegerField(default=0, blank=True, null=True)
+
+    # followers = models.ManyToManyField('self', blank=True, through='user.Twitter_User', through_fields=('user', 'follow'))
 
     def __str__(self):
         return self.username
@@ -24,9 +25,9 @@ class UserTweet(models.Model):
     upload_date = models.DateTimeField(auto_now=True)
 
 
-# class Followers(models.Model):
-#     user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-#     follow_id = models.ForeignKey(Twitter_User, on_delete=models.CASCADE)
+# class Follower(models.Model):
+#     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+#     follow = models.ForeignKey(User, on_delete=models.CASCADE)
 #     """
 #     follow_id used for identifying the follower user id
 #     """
