@@ -181,27 +181,30 @@ body {
 <!--<h1 align="center">{% block header %}Login Page{% endblock %}</h1>-->
 
 <div class="login-box">
-{% block loginpage %}
-  <form>
-  <center>  <span><i class='fa fa-twitter fa-4x'></i></span></center><br><br>
-    <div class="user-box">
-      <input type="text" name="lusername" required="">
-      <label>Username</label>
-    </div>
-    <div class="user-box">
-      <input type="password" name="lpassword" required="">
-      <label>Password</label>
-    </div>
-    <button href="#" type="button">
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      Submit
-    </button>
-    &nbsp;<a href="{% url 'user_registration' %}" style="color:white;">New User?SignUp</a>
-  </form>
-  {% endblock %}
+    {% block loginpage %}
+    <form method="post" action="">
+        {% csrf_token %}
+        <center><span><i class='fa fa-twitter fa-4x'></i></span></center>
+        <br><br>
+        {% for data in form %}
+        <div class="user-box">
+            {{ data.label }}
+            {{ data }}
+        </div>
+        {% endfor %}
+        {% if form.error %}
+            This should pop up if there is an error
+        {% endif %}
+        <button href="#" type="Submit">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            Submit
+        </button>
+        &nbsp;<a href="{% url 'user_registration' %}" style="color:white;">New User?SignUp</a>
+    </form>
+    {% endblock %}
 </div>
 </body>
 </html>

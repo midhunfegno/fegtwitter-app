@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from fegtwitterapp.models import User_Tweet, Twitter_User
+from fegtwitterapp.models import UserTweet, User
 
-admin.site.register(Twitter_User)
-admin.site.register(User_Tweet)
+admin.site.register(User)
+admin.site.register(UserTweet)

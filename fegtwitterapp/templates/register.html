@@ -1,21 +1,22 @@
-{% extends 'login.html' %}
+{% extends 'registration/login.html' %}
 {% block loginpage %}
-  <form>
+<form action="" method="post">
+  {% csrf_token %}
   <center>  <span><i class='fa fa-twitter fa-4x'></i></span></center><br><br>
-   {% for data in form %}
+  {% for data in form %}
   <div class="user-box">
-        {{data.label}}
-      {{ data }}
+    {{data.label}}
+    {{ data }}
 
   </div>
-    {% endfor %}
-    <button href="#" type="button">
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      Submit
-    </button>
-    &nbsp;<a href="{% url 'user_login' %}" style="color:white;">Existing User? Signin</a>
-  </form>
+  {% endfor %}
+  <button href="{% url 'user_registration' %}" type="Submit">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    Submit
+  </button>
+  &nbsp;<a href="{% url 'login_view' %}" style="color:white;">Existing User? Signin</a>
+</form>
 {% endblock %}

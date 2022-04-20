@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'fegtwitterapp',
+    'django_extensions',
+    'django.contrib.humanize'
 ]
 
 MIDDLEWARE = [
@@ -77,7 +79,7 @@ WSGI_APPLICATION = 'fegtwitter.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'twitter',
+        'NAME': 'twitter_db',
         'USER': 'marshal',
         'PASSWORD': '12345',
         'HOST': 'localhost',
@@ -129,4 +131,22 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'fegtwitterapp.Twitter_User'
+AUTH_USER_MODEL = 'fegtwitterapp.User'
+
+
+LOGIN_REDIRECT_URL = 'homepage'
+LOGOUT_REDIRECT_URL = 'login_view'
+
+
+# Base url to serve media files
+MEDIA_URL = '/media/'
+
+# Path where media is stored
+MEDIA_ROOT = os.path.join(BASE_DIR, 'fegtwitterapp', 'media')
+
+# STATIC_URL = 'assets/'
+# STATICFILES_DIRS = [ BASE_DIR / "public" / "assets", ]
+# STATIC_ROOT = os.path.join(BASE_DIR, 'public', 'static')
+
+# MEDIA_URL = 'src/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'public', 'media')
