@@ -11,8 +11,8 @@ class User(AbstractUser):
     follower_count = models.IntegerField(default=0, blank=True, null=True)
     following_count = models.IntegerField(default=0, blank=True, null=True)
     tweet_count = models.IntegerField(default=0, blank=True, null=True)
-
-    # followers = models.ManyToManyField('self', blank=True, through='user.Twitter_User', through_fields=('user', 'follow'))
+    # followers = models.ManyToManyField('self', blank=True, through='user.Twitter_User',\
+    # through_fields=('user', 'follow'))
 
     def __str__(self):
         return self.username

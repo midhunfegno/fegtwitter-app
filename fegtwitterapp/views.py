@@ -1,8 +1,7 @@
-import pdb
 
 from django.contrib import messages
 
-from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
+from django.contrib.auth.mixins import  LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 
 from django.urls import reverse
@@ -62,6 +61,16 @@ class MyTweetListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return UserTweet.objects.all().filter(user=self.request.user).order_by('-upload_date')
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        Relation_table = User.followers.through
+        """
+        alreadyfollowing is a list that shows users that are already follwing me
+        """
+        ids = Relation_table.objects.filter(to_user=self.request.user).values_list('from_user', flat=True)
+        context['follow_recommendations'] = User.objects.filter(id__in=ids)
+        return context
 
 
 class MyTweetUpdateView(LoginRequiredMixin, UpdateView):
