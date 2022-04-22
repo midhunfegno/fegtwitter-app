@@ -12,41 +12,32 @@
         <button  class="tweetBox__tweetButton" type="Submit" >Submit</button>
     </form>
 </div>
-
 <!-- post starts -->
 {% for p in object_list %}
 <div class="post">
     <div class="post__avatar">
-        <img
-                src="https://i.pinimg.com/originals/a6/58/32/a65832155622ac173337874f02b218fb.png"
-                alt=""
-        />
+        <img src="https://i.pinimg.com/originals/a6/58/32/a65832155622ac173337874f02b218fb.png" alt=""/>
     </div>
-
     <div class="post__body">
         <div class="post__header">
             <div class="post__headerText">
                 <h3><a class="title-a" href="" >{{ p.user.fullname }}</a>
-                <span class="post__headerSpecial" style="font-size: 16px">
+                    <span class="post__headerSpecial" style="font-size: 16px">
                     <span class="material-icons post__badge"> verified </span>@{{ p.user }}
                     <span>. {{ p.upload_date|naturaltime }}</span></span>
-
-<div class="dropdown" style="float:right;">
-    {% if p.user == user %}
-  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"
-  	style="width:50px;height:50px;float: right;">
-      <span  class="fas fa-ellipsis-h fa-2x"></span>
-  </button>
-  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-    <li><a href="{% url 'my_tweets_update' p.id %}">Update</a></li>
-    <li><a href="{% url 'my_tweets_delete' p.id %}">Delete</a></li>
-<!--    <li><a href="#">Something else here</a></li>-->
-<!--    <li><a href="#">Separated link</a></li>-->
-  </ul>
-      {% endif %}
-</div>
-
- </h3>
+                    <div class="dropdown" style="float:right;">
+                        {% if p.user == user %}
+                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"
+                                style="width:50px;height:50px;float: right;">
+                            <span  class="fas fa-ellipsis-h fa-2x"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li><a href="{% url 'my_tweets_update' p.id %}">Update</a></li>
+                            <li><a href="{% url 'my_tweets_delete' p.id %}">Delete</a></li>
+                        </ul>
+                        {% endif %}
+                    </div>
+                </h3>
             </div>
             <div class="post__headerDescription">
                 <br>
@@ -58,38 +49,53 @@
             <span class="material-icons fa-2x"> favorite_border </span>
             <span class="material-icons fa-2x"> repeat </span>
             <span class="material-icons fa-2x"> publish </span>
-
-
         </div>
     </div>
-
 </div>
 {% endfor %}
-<!-- post ends -->
+<nav aria-label="..." align="center">
+    <ul class="pagination  pagination-lg">
+        {% if page_obj.has_previous %}
+<!--        <li class="page-item"><a class="page-link" href="?page=1">1</a></li>-->
+        <li class="page-item ">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1">Previous</a>
+        </li>
 
-{% endblock %}
-{% block widgets %}
-<div class="widgets__widgetContainer">
-    <h2>You might like</h2>
-<!--    <blockquote class="twitter-tweet">-->
-<!--      <p lang="en" dir="ltr">-->
-<!--        Sunsets don&#39;t get much better than this one over-->
-<!--        <a href="https://twitter.com/GrandTetonNPS?ref_src=twsrc%5Etfw">@GrandTetonNPS</a>.-->
-<!--        <a href="https://twitter.com/hashtag/nature?src=hash&amp;ref_src=twsrc%5Etfw"-->
-<!--        >#nature</a-->
-<!--        >-->
-<!--        <a href="https://twitter.com/hashtag/sunset?src=hash&amp;ref_src=twsrc%5Etfw"-->
-<!--        >#sunset</a-->
-<!--        >-->
-<!--        <a href="http://t.co/YuKy2rcjyU">pic.twitter.com/YuKy2rcjyU</a>-->
-<!--      </p>-->
-<!--      &mdash; US Department of the Interior (@Interior)-->
-<!--      <a href="https://twitter.com/Interior/status/463440424141459456?ref_src=twsrc%5Etfw"-->
-<!--      >May 5, 2014</a-->
-<!--      >-->
-<!--    </blockquote>-->
-<!--    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>-->
-    {% include 'followpage.html' %}
-  </div>
+        {% endif %}
 
-{% endblock %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}</a></li>
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+    <!-- post ends -->
+
+    {% endblock %}
+    {% block widgets %}
+    <div class="widgets__widgetContainer">
+        <h2>You might like</h2>
+        <!--    <blockquote class="twitter-tweet">-->
+        <!--      <p lang="en" dir="ltr">-->
+        <!--        Sunsets don&#39;t get much better than this one over-->
+        <!--        <a href="https://twitter.com/GrandTetonNPS?ref_src=twsrc%5Etfw">@GrandTetonNPS</a>.-->
+        <!--        <a href="https://twitter.com/hashtag/nature?src=hash&amp;ref_src=twsrc%5Etfw"-->
+        <!--        >#nature</a-->
+        <!--        >-->
+        <!--        <a href="https://twitter.com/hashtag/sunset?src=hash&amp;ref_src=twsrc%5Etfw"-->
+        <!--        >#sunset</a-->
+        <!--        >-->
+        <!--        <a href="http://t.co/YuKy2rcjyU">pic.twitter.com/YuKy2rcjyU</a>-->
+        <!--      </p>-->
+        <!--      &mdash; US Department of the Interior (@Interior)-->
+        <!--      <a href="https://twitter.com/Interior/status/463440424141459456?ref_src=twsrc%5Etfw"-->
+        <!--      >May 5, 2014</a-->
+        <!--      >-->
+        <!--    </blockquote>-->
+        <!--    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>-->
+        {% include 'followpage.html' %}
+    </div>
+
+    {% endblock %}

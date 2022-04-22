@@ -11,5 +11,8 @@ urlpatterns = [
     path('mytweetupdate/<int:pk>/', views.MyTweetUpdateView.as_view(), name='my_tweets_update'),
     path('mytweetdelete/<int:pk>/', views.MyTweetDeleteView.as_view(), name='my_tweets_delete'),
     path('reg/', views.UserRegistration.as_view(), name='user_registration'),
+    path('ajax/', views.ajax_submission, name='ajax_submission'),
+    path('ajax_unfollow/', views.ajax_submission_unfollow, name='ajax_submission_unfollow'),
+    path('following/', views.MyFollowersListView.as_view(), name='following_users'),
 
 ]

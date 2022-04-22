@@ -100,22 +100,18 @@ ul.twPc-Arrange {
 }
 
 </style>
+{% extends 'index.html' %}
 
-<!--<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">-->
-<!--<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>-->
-<!--<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>-->
-<!------ Include the above in your HEAD tag ---------->
-
-<div class="row">
-	{% for recommended_user in follow_recommendations %}
+{% block tweetbox %}
+<div class="row" style="margin: 20px;">
+	{% for following_users in alreadyfollowing %}
 	<div class="twPc-div">
 		<a class="twPc-bg twPc-block"></a>
-
 		<div>
 			<div class="twPc-button">
 				<!--				<a href="#" class="twitter-follow-button" data-show-count="false" data-size="large" data-show-screen-name="false" data-dnt="true">Follow </a>-->
 
-					<button type="submit" class="twitter-follow-button"  data-id="{{recommended_user.id}}">Follow</button>
+					<button type="submit" class="twitter-follow-button" id="twitter-follow-button{{following_users.id}}"  data-id="{{following_users.id}}">UnFollow</button>
 
 			</div>
 			<a title="Mert S. Kaplan" href="#" class="twPc-avatarLink">
@@ -123,10 +119,10 @@ ul.twPc-Arrange {
 			</a>
 			<div class="twPc-divUser">
 				<div class="twPc-divName">
-					<a href="">{{ recommended_user.fullname|default:"Name" }}</a>
+					<a href="">{{ following_users.fullname|default:"Name" }}</a>
 				</div>
 				<span>
-				<a href="">@<span>{{ recommended_user.username }}</span></a>
+				<a href="">@<span>{{ following_users.username }}</span></a>
 			</span>
 			</div>
 		</div>
@@ -134,22 +130,22 @@ ul.twPc-Arrange {
 	{% endfor %}
 	<!-- code end -->
 </div>
-<!--<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>-->
 <script type="text/javascript">
 const elements = document.querySelectorAll('.twitter-follow-button');
-const elementbutton = document.getElementById('.twitter-follow-button')
+
 function myFunction(event){
     var element = event.target.getAttribute('data-id') ;
     var DataJSON = {
     	element:element
     }
+    alert(element);
 	$.ajax({
-	url  : "{% url 'ajax_submission' %}",
+	url  : "{% url 'ajax_submission_unfollow' %}",
 	method : 'post',
 	data : DataJSON,
 	success:function(data){
-  		console.log(data);
-  		$('[data-id="'+element+'"]').html("Unfollow")
+	console.log('[data-id="'+element+'"]');
+		$('[data-id="'+element+'"]').html("Follow")
   	}
   	});
 }
@@ -159,3 +155,6 @@ for(let i=0;i<elements.length;i++){
 
 
 </script>
+{% endblock %}
+{% block widgets %}
+{% endblock %}

@@ -1,10 +1,13 @@
 
 from django.contrib import messages
 
-from django.contrib.auth.mixins import  LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.http import HttpResponse
+from django.shortcuts import redirect
 
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 from fegtwitterapp.forms import RegistrationForm, PostForm, UpdatePostForm
@@ -13,10 +16,21 @@ from fegtwitterapp.models import User, UserTweet
 
 class HomePage(LoginRequiredMixin, ListView):
     model = UserTweet
+    paginate_by = 5
     template_name = "index.html"
 
     def get_queryset(self):
         return UserTweet.objects.all().exclude(user=self.request.user).order_by('-upload_date')
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        Relation_table = User.followers.through
+        """
+        alreadyfollowing is a list that shows users that are already follwing 
+        """
+        alreadyfollowing = Relation_table.objects.filter(to_user=self.request.user).values_list('from_user', flat=True)
+        context['follow_recommendations'] = User.objects.exclude(id__in=alreadyfollowing)
+        return context
 
 
 class UserRegistration(SuccessMessageMixin, CreateView):
@@ -57,6 +71,7 @@ class UserTweetCreateView(LoginRequiredMixin, CreateView):
 
 class MyTweetListView(LoginRequiredMixin, ListView):
     model = UserTweet
+    paginate_by = 5
     template_name = "mytweetpage.html"
 
     def get_queryset(self):
@@ -68,8 +83,8 @@ class MyTweetListView(LoginRequiredMixin, ListView):
         """
         alreadyfollowing is a list that shows users that are already follwing me
         """
-        ids = Relation_table.objects.filter(to_user=self.request.user).values_list('from_user', flat=True)
-        context['follow_recommendations'] = User.objects.filter(id__in=ids)
+        alreadyfollowing = Relation_table.objects.filter(to_user=self.request.user).values_list('from_user', flat=True)
+        context['follow_recommendations'] = User.objects.exclude(id__in=alreadyfollowing)
         return context
 
 
@@ -100,3 +115,36 @@ class MyTweetDeleteView(DeleteView):
         return super(MyTweetDeleteView, self).delete(request, *args)
 
 
+@csrf_exempt
+def ajax_submission(request):
+
+    if request.method == "POST":
+        followerid = request.POST.get('element')
+        User.objects.get(id=followerid).followers.add(request.user.id)
+    return HttpResponse("Ok")
+
+
+class MyFollowersListView(ListView):
+    model = User
+    template_name = "followingpage.html"
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        Relation_table = User.followers.through
+        """
+        alreadyfollowing is a list that shows users that are already follwing me
+        """
+        alreadyfollowing = Relation_table.objects.filter(to_user=self.request.user).values_list('from_user', flat=True)
+        context['follow_recommendations'] = User.objects.exclude(id__in=alreadyfollowing)
+        context['alreadyfollowing'] = User.objects.get(id=self.request.user.id).followers.all()
+        return context
+
+
+@csrf_exempt
+def ajax_submission_unfollow(request):
+
+    if request.method == "POST":
+        print("Hallo")
+        followerid = request.POST.get('element')
+        User.objects.get(id=followerid).followers.remove(request.user.id)
+    return HttpResponse("Ok")
