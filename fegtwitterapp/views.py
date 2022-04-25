@@ -16,7 +16,7 @@ from fegtwitterapp.models import User, UserTweet
 
 class HomePage(LoginRequiredMixin, ListView):
     model = UserTweet
-    paginate_by = 5
+    paginate_by = 10
     template_name = "index.html"
 
     def get_queryset(self):
@@ -71,7 +71,7 @@ class UserTweetCreateView(LoginRequiredMixin, CreateView):
 
 class MyTweetListView(LoginRequiredMixin, ListView):
     model = UserTweet
-    paginate_by = 5
+    paginate_by = 10
     template_name = "mytweetpage.html"
 
     def get_queryset(self):
@@ -144,7 +144,6 @@ class MyFollowersListView(ListView):
 def ajax_submission_unfollow(request):
 
     if request.method == "POST":
-        print("Hallo")
         followerid = request.POST.get('element')
         User.objects.get(id=followerid).followers.remove(request.user.id)
     return HttpResponse("Ok")

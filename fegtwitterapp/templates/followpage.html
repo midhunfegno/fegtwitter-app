@@ -108,29 +108,32 @@ ul.twPc-Arrange {
 
 <div class="row">
 	{% for recommended_user in follow_recommendations %}
-	<div class="twPc-div">
-		<a class="twPc-bg twPc-block"></a>
+	<form>
+		<div class="twPc-div">
 
-		<div>
-			<div class="twPc-button">
-				<!--				<a href="#" class="twitter-follow-button" data-show-count="false" data-size="large" data-show-screen-name="false" data-dnt="true">Follow </a>-->
+			<a class="twPc-bg twPc-block"></a>
+
+			<div>
+				<div class="twPc-button">
+					<!--				<a href="#" class="twitter-follow-button" data-show-count="false" data-size="large" data-show-screen-name="false" data-dnt="true">Follow </a>-->
 
 					<button type="submit" class="twitter-follow-button"  data-id="{{recommended_user.id}}">Follow</button>
 
-			</div>
-			<a title="Mert S. Kaplan" href="#" class="twPc-avatarLink">
-				<img alt="Mert S. Kaplan" src="https://randomuser.me/api/portraits/men/1{{ forloop.counter }}.jpg" class="twPc-avatarImg">
-			</a>
-			<div class="twPc-divUser">
-				<div class="twPc-divName">
-					<a href="">{{ recommended_user.fullname|default:"Name" }}</a>
 				</div>
-				<span>
+				<a title="Mert S. Kaplan" href="#" class="twPc-avatarLink">
+					<img alt="Mert S. Kaplan" src="https://randomuser.me/api/portraits/men/{{ forloop.counter }}.jpg" class="twPc-avatarImg">
+				</a>
+				<div class="twPc-divUser">
+					<div class="twPc-divName">
+						<a href="">{{ recommended_user.fullname|default:"Name" }}</a>
+					</div>
+					<span>
 				<a href="">@<span>{{ recommended_user.username }}</span></a>
 			</span>
+				</div>
 			</div>
 		</div>
-	</div>
+	</form>
 	{% endfor %}
 	<!-- code end -->
 </div>
@@ -149,7 +152,8 @@ function myFunction(event){
 	data : DataJSON,
 	success:function(data){
   		console.log(data);
-  		$('[data-id="'+element+'"]').html("Unfollow")
+  		$('[data-id="'+element+'"]').html("Unfollow");
+		form.reload();
   	}
   	});
 }

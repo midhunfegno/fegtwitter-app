@@ -44,7 +44,7 @@
                 <p>{{ p.text }}</p>
             </div>
         </div>
-        <img src="https://www.focus2move.com/wp-content/uploads/2020/01/Tesla-Roadster-2020-1024-03.jpg" alt="" />
+        <!--        <img src="https://www.focus2move.com/wp-content/uploads/2020/01/Tesla-Roadster-2020-1024-03.jpg" alt="" />-->
         <div class="post__footer">
             <span class="material-icons fa-2x"> favorite_border </span>
             <span class="material-icons fa-2x"> repeat </span>
@@ -56,13 +56,10 @@
 <nav aria-label="..." align="center">
     <ul class="pagination  pagination-lg">
         {% if page_obj.has_previous %}
-<!--        <li class="page-item"><a class="page-link" href="?page=1">1</a></li>-->
         <li class="page-item ">
             <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1">Previous</a>
         </li>
-
         {% endif %}
-
         <li class="page-item"><a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}</a></li>
         {% if page_obj.has_next %}
         <li class="page-item">
@@ -71,31 +68,13 @@
         {% endif %}
     </ul>
 </nav>
-    <!-- post ends -->
+<!-- post ends -->
 
-    {% endblock %}
-    {% block widgets %}
-    <div class="widgets__widgetContainer">
-        <h2>You might like</h2>
-        <!--    <blockquote class="twitter-tweet">-->
-        <!--      <p lang="en" dir="ltr">-->
-        <!--        Sunsets don&#39;t get much better than this one over-->
-        <!--        <a href="https://twitter.com/GrandTetonNPS?ref_src=twsrc%5Etfw">@GrandTetonNPS</a>.-->
-        <!--        <a href="https://twitter.com/hashtag/nature?src=hash&amp;ref_src=twsrc%5Etfw"-->
-        <!--        >#nature</a-->
-        <!--        >-->
-        <!--        <a href="https://twitter.com/hashtag/sunset?src=hash&amp;ref_src=twsrc%5Etfw"-->
-        <!--        >#sunset</a-->
-        <!--        >-->
-        <!--        <a href="http://t.co/YuKy2rcjyU">pic.twitter.com/YuKy2rcjyU</a>-->
-        <!--      </p>-->
-        <!--      &mdash; US Department of the Interior (@Interior)-->
-        <!--      <a href="https://twitter.com/Interior/status/463440424141459456?ref_src=twsrc%5Etfw"-->
-        <!--      >May 5, 2014</a-->
-        <!--      >-->
-        <!--    </blockquote>-->
-        <!--    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>-->
-        {% include 'followpage.html' %}
-    </div>
+{% endblock %}
+{% block widgets %}
+<div class="widgets__widgetContainer">
+    <h2>You might like</h2>
+    {% include 'followpage.html' %}
+</div>
 
-    {% endblock %}
+{% endblock %}

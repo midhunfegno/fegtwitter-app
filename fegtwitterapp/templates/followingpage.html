@@ -105,6 +105,7 @@ ul.twPc-Arrange {
 {% block tweetbox %}
 <div class="row" style="margin: 20px;">
 	{% for following_users in alreadyfollowing %}
+	<form>
 	<div class="twPc-div">
 		<a class="twPc-bg twPc-block"></a>
 		<div>
@@ -127,6 +128,7 @@ ul.twPc-Arrange {
 			</div>
 		</div>
 	</div>
+		</form>
 	{% endfor %}
 	<!-- code end -->
 </div>
@@ -138,14 +140,13 @@ function myFunction(event){
     var DataJSON = {
     	element:element
     }
-    alert(element);
 	$.ajax({
 	url  : "{% url 'ajax_submission_unfollow' %}",
 	method : 'post',
 	data : DataJSON,
 	success:function(data){
-	console.log('[data-id="'+element+'"]');
 		$('[data-id="'+element+'"]').html("Follow")
+		form.reload();
   	}
   	});
 }
