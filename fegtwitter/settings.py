@@ -146,6 +146,19 @@ MEDIA_URL = '/media/'
 # Path where media is stored
 MEDIA_ROOT = os.path.join(BASE_DIR, 'fegtwitterapp', 'media')
 
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379',
+    }
+}
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
+# INTERNAL_IPS = ("127.0.0.1", "172.17.0.1")
+
 # STATIC_URL = 'assets/'
 # STATICFILES_DIRS = [ BASE_DIR / "public" / "assets", ]
 # STATIC_ROOT = os.path.join(BASE_DIR, 'public', 'static')

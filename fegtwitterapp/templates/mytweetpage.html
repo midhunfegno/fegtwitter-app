@@ -1,1 +1,70 @@
 {% extends 'index.html' %}
+{% load humanize %}
+{% block title %}My tweets{% endblock %}
+{% block tweetbox %}
+
+{% for p in object_list %}
+<div class="post">
+    <div class="post__avatar">
+        <img src="https://i.pinimg.com/originals/a6/58/32/a65832155622ac173337874f02b218fb.png" alt=""/>
+    </div>
+    <div class="post__body">
+        <div class="post__header">
+            <div class="post__headerText">
+                <h3><a class="title-a" href="" >{{ p.user.fullname }}</a>
+                    <span class="post__headerSpecial" style="font-size: 16px">
+                    <span class="material-icons post__badge"> verified </span>@{{ p.user }}
+                    <span>. {{ p.upload_date|naturaltime }}</span></span>
+                    <div class="dropdown" style="float:right;">
+                        {% if p.user == user %}
+                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"
+                                style="width:50px;height:50px;float: right;">
+                            <span  class="fas fa-ellipsis-h "></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li><a href="{% url 'my_tweets_update' p.id %}">Update</a></li>
+                            <li><a href="{% url 'my_tweets_delete' p.id %}">Delete</a></li>
+                        </ul>
+                        {% endif %}
+                    </div>
+                </h3>
+            </div>
+            <div class="post__headerDescription">
+                <br>
+                <p>{{ p.text }}</p>
+            </div>
+        </div>
+        <!--        <img src="https://www.focus2move.com/wp-content/uploads/2020/01/Tesla-Roadster-2020-1024-03.jpg" alt="" />-->
+        <div class="post__footer">
+            <span class="material-icons "> favorite_border </span>
+            <span class="material-icons "> repeat </span>
+            <span class="material-icons "> publish </span>
+        </div>
+    </div>
+</div>
+{% endfor %}
+<nav aria-label="..." align="center">
+    <ul class="pagination  pagination-lg">
+        {% if page_obj.has_previous %}
+        <li class="page-item ">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1">Previous</a>
+        </li>
+        {% endif %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}</a></li>
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+<!-- post ends -->
+
+{% endblock %}
+{% block widgets %}
+<div class="widgets__widgetContainer">
+    <h2>You might like</h2>
+    {% include 'followpage.html' %}
+</div>
+
+{% endblock %}

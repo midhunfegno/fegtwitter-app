@@ -3,8 +3,8 @@ from django.contrib import messages
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.core.cache import cache
 from django.http import HttpResponse
-from django.shortcuts import redirect
 
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
@@ -20,7 +20,19 @@ class HomePage(LoginRequiredMixin, ListView):
     template_name = "index.html"
 
     def get_queryset(self):
-        return UserTweet.objects.all().exclude(user=self.request.user).order_by('-upload_date')
+        userdetail = self.request.user.id
+        tweetkey = "TWEETID_{}".format(userdetail)
+        print(tweetkey)
+        if cache.get(tweetkey):
+            tweetdata = cache.get(tweetkey)
+            print("DATA FROM CACHE")
+            return tweetdata
+        else:
+            print("DATA FROM DB")
+            tweetlist = UserTweet.objects.all().exclude(user=userdetail).select_related("user").order_by('-upload_date')
+            print(tweetkey)
+            cache.set(tweetkey, tweetlist)
+            return tweetlist
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -29,7 +41,9 @@ class HomePage(LoginRequiredMixin, ListView):
         alreadyfollowing is a list that shows users that are already follwing 
         """
         alreadyfollowing = Relation_table.objects.filter(to_user=self.request.user).values_list('from_user', flat=True)
-        context['follow_recommendations'] = User.objects.exclude(id__in=alreadyfollowing)
+        context['follow_recommendations'] = User.objects.exclude(id__in=alreadyfollowing).order_by('?')[:8]
+        # tweetfollowkey = "UID_FOLLOW:{}".format(self.request.user)
+        # cache.set(tweetfollowkey, context['follow_recommendations'])
         return context
 
 
@@ -75,7 +89,18 @@ class MyTweetListView(LoginRequiredMixin, ListView):
     template_name = "mytweetpage.html"
 
     def get_queryset(self):
-        return UserTweet.objects.all().filter(user=self.request.user).order_by('-upload_date')
+        myuserdetail = self.request.user
+        mytweetkey = "{}_USER_TWEETS".format(myuserdetail)
+        if cache.get(mytweetkey):
+            tweetdata = cache.get(mytweetkey)
+            print("DATA FROM CACHE")
+            return tweetdata
+        else:
+            print("DATA FROM DB")
+            tweetlist = UserTweet.objects.all().filter(user=myuserdetail).select_related("user").order_by('-upload_date')
+            print(mytweetkey)
+            cache.set(mytweetkey, tweetlist)
+            return tweetlist
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -83,8 +108,8 @@ class MyTweetListView(LoginRequiredMixin, ListView):
         """
         alreadyfollowing is a list that shows users that are already follwing me
         """
-        alreadyfollowing = Relation_table.objects.filter(to_user=self.request.user).values_list('from_user', flat=True)
-        context['follow_recommendations'] = User.objects.exclude(id__in=alreadyfollowing)
+        alreadyfollowing = Relation_table.objects.filter(to_user=self.request.user).values_list('from_user')
+        context['follow_recommendations'] = User.objects.exclude(id__in=alreadyfollowing).order_by('?')[:8]
         return context
 
 
@@ -100,7 +125,6 @@ class MyTweetUpdateView(LoginRequiredMixin, UpdateView):
         return super(MyTweetUpdateView, self).form_valid(form=form)
 
     def get_success_url(self):
-
         return reverse('my_tweets')
 
 

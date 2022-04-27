@@ -101,7 +101,7 @@ ul.twPc-Arrange {
 
 </style>
 {% extends 'index.html' %}
-
+{% block title %}Following{% endblock %}
 {% block tweetbox %}
 <div class="row" style="margin: 20px;">
 	{% for following_users in alreadyfollowing %}
@@ -116,7 +116,7 @@ ul.twPc-Arrange {
 
 			</div>
 			<a title="Mert S. Kaplan" href="#" class="twPc-avatarLink">
-				<img alt="Mert S. Kaplan" src="https://randomuser.me/api/portraits/men/1{{ forloop.counter }}.jpg" class="twPc-avatarImg">
+				<img alt="Mert S. Kaplan" src="https://randomuser.me/api/portraits/men/{{ forloop.counter }}.jpg" class="twPc-avatarImg">
 			</a>
 			<div class="twPc-divUser">
 				<div class="twPc-divName">
