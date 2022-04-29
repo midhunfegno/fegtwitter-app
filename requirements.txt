@@ -6,7 +6,9 @@ decorator==5.1.1
 Django==3.2.13
 django-debug-toolbar==3.2.4
 django-extensions==3.1.5
+django-redis-cache==3.0.1
 Faker==13.4.0
+follow==0.3
 form==0.0.1
 idna==3.3
 null==0.6.1
@@ -14,7 +16,9 @@ password==0.2
 psycopg2==2.9.3
 python-dateutil==2.8.2
 pytz==2022.1
+redis==3.5.3
 requests==2.27.1
+sel==0.2.2
 self==2020.12.3
 six==1.16.0
 sqlparse==0.4.2

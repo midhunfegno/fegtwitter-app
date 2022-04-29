@@ -1,9 +1,9 @@
 {% extends 'index.html' %}
 {% load humanize %}
-{% block title %}My tweets{% endblock %}
+{% block title %}My tweets({{ user.fullname }}){% endblock %}
 {% block tweetbox %}
 
-{% for p in object_list %}
+{% for p in tweets %}
 <div class="post">
     <div class="post__avatar">
         <img src="https://i.pinimg.com/originals/a6/58/32/a65832155622ac173337874f02b218fb.png" alt=""/>

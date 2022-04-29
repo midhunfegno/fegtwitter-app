@@ -1,6 +1,4 @@
-
 from django.contrib import messages
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.cache import cache
@@ -16,34 +14,29 @@ from fegtwitterapp.models import User, UserTweet
 
 class HomePage(LoginRequiredMixin, ListView):
     model = UserTweet
+    queryset = UserTweet.objects.all()
     paginate_by = 10
     template_name = "index.html"
 
-    def get_queryset(self):
-        userdetail = self.request.user.id
-        tweetkey = "TWEETID_{}".format(userdetail)
-        print(tweetkey)
-        if cache.get(tweetkey):
-            tweetdata = cache.get(tweetkey)
-            print("DATA FROM CACHE")
-            return tweetdata
-        else:
-            print("DATA FROM DB")
-            tweetlist = UserTweet.objects.all().exclude(user=userdetail).select_related("user").order_by('-upload_date')
-            print(tweetkey)
-            cache.set(tweetkey, tweetlist)
-            return tweetlist
-
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        Relation_table = User.followers.through
-        """
-        alreadyfollowing is a list that shows users that are already follwing 
-        """
-        alreadyfollowing = Relation_table.objects.filter(to_user=self.request.user).values_list('from_user', flat=True)
-        context['follow_recommendations'] = User.objects.exclude(id__in=alreadyfollowing).order_by('?')[:8]
-        # tweetfollowkey = "UID_FOLLOW:{}".format(self.request.user)
-        # cache.set(tweetfollowkey, context['follow_recommendations'])
+        # import pdb;pdb.set_trace()
+        print("current_user", self.request.user)
+
+        user_timeline_key = "{}_USER_TIMELINE".format(self.request.user)
+        user_timeline = cache.get(user_timeline_key)
+        print("user_timeline_key", user_timeline_key, user_timeline)
+
+        # import pdb;pdb.set_trace()
+        result = []
+        if user_timeline is not None:
+            new_timeline = sorted(user_timeline, reverse=True)
+            for tweet_id in new_timeline:
+                result.append(cache.get(f'{tweet_id}_TWEET_ID'))
+        context['tweets'] = result
+        # print("value:", new_timeline)
+        print("usertimeline:", result)
+
         return context
 
 
@@ -69,10 +62,61 @@ class UserTweetCreateView(LoginRequiredMixin, CreateView):
     form_class = PostForm
 
     def form_valid(self, form):
-        # import pdb
-        # pdb.set_trace()
         form.instance.user = self.request.user
         form.save()
+        post_instance = form.instance
+        """
+        setting up cache for tweets posted by users       
+        """
+        post_key = f'{post_instance.id}_TWEET_ID'
+        cache.set(post_key, {
+            "user": post_instance.user,
+            "text": post_instance.text,
+            "upload_date": post_instance.upload_date
+        })
+        print("post_key:", post_key)
+        print("cached post_key:", cache.get(post_key))
+
+        """             
+        setting up cache for user timeline 
+        """
+
+        followuser = self.request.user.followers.all().values_list('username', flat=True)
+        userkey = [f'{post_instance.user}_USER_TIMELINE']
+        print("followuser", followuser)
+        userfollowtimeline = cache.get(userkey)
+        """
+                setting cache for user
+        """
+        if userfollowtimeline is None:
+            userfollowtimeline = []
+            print("test_data", userfollowtimeline)
+            cache.set(userkey, userfollowtimeline)
+        else:
+            userfollowtimeline.append(post_instance.id)
+            cache.set(userkey, userfollowtimeline)
+        print("current user  cache", userfollowtimeline, userkey, cache.get(userkey))
+        """
+                setting cache for followers
+        """
+        for followid in followuser:
+            followkey = [f'{followid}_USER_TIMELINE']
+            followtimeline = cache.get(followkey)
+            if followtimeline is None:
+                followtimeline = []
+                cache.set(followkey, followtimeline)
+                print("current follow cache", followtimeline, followkey)
+            else:
+                followtimeline.append(post_instance.id)
+                print("{}".format(followkey), followtimeline)
+                cache.set(followkey, followtimeline)
+                print("current follow cache", followtimeline, followkey, cache.get(followkey))
+
+        # redis_cache = caches.create_connection('default')
+        # redis_cache.get_many(['follow_id1', 'follow_id2', 'follow_id3'])
+        # redis_cache.get_many(['follow_id1', 'follow_id2', 'follow_id3'])
+        # redis_cache.set_many()
+
         return super(UserTweetCreateView, self).form_valid(form=form)
 
     def form_invalid(self, form):
@@ -89,25 +133,12 @@ class MyTweetListView(LoginRequiredMixin, ListView):
     template_name = "mytweetpage.html"
 
     def get_queryset(self):
-        myuserdetail = self.request.user
-        mytweetkey = "{}_USER_TWEETS".format(myuserdetail)
-        if cache.get(mytweetkey):
-            tweetdata = cache.get(mytweetkey)
-            print("DATA FROM CACHE")
-            return tweetdata
-        else:
-            print("DATA FROM DB")
-            tweetlist = UserTweet.objects.all().filter(user=myuserdetail).select_related("user").order_by('-upload_date')
-            print(mytweetkey)
-            cache.set(mytweetkey, tweetlist)
-            return tweetlist
+        return UserTweet.objects.all().filter(user=self.request.user).select_related("user").order_by('-upload_date')
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         Relation_table = User.followers.through
-        """
-        alreadyfollowing is a list that shows users that are already follwing me
-        """
+        """        alreadyfollowing is a list that shows users that are already follwing me               """
         alreadyfollowing = Relation_table.objects.filter(to_user=self.request.user).values_list('from_user')
         context['follow_recommendations'] = User.objects.exclude(id__in=alreadyfollowing).order_by('?')[:8]
         return context
@@ -119,7 +150,6 @@ class MyTweetUpdateView(LoginRequiredMixin, UpdateView):
     form_class = UpdatePostForm
 
     def form_valid(self, form):
-        # form = UpdatePostForm(instance=self.get_object())
         form.instance.user = self.request.user
         form.save()
         return super(MyTweetUpdateView, self).form_valid(form=form)
@@ -132,9 +162,9 @@ class MyTweetDeleteView(DeleteView):
     model = UserTweet
     template_name = "mytweetpage.html"
     success_url = '/mytweet'
-    """
-    here we use get method and return deleted result
-    """
+
+    """       here we use get method and return deleted result         """
+
     def get(self, request, *args, **kwargs):
         return super(MyTweetDeleteView, self).delete(request, *args)
 
@@ -155,9 +185,9 @@ class MyFollowersListView(ListView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         Relation_table = User.followers.through
-        """
-        alreadyfollowing is a list that shows users that are already follwing me
-        """
+
+        """      alreadyfollowing is a list that shows users that are already follwing me         """
+
         alreadyfollowing = Relation_table.objects.filter(to_user=self.request.user).values_list('from_user', flat=True)
         context['follow_recommendations'] = User.objects.exclude(id__in=alreadyfollowing)
         context['alreadyfollowing'] = User.objects.get(id=self.request.user.id).followers.all()

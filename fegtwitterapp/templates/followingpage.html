@@ -101,7 +101,7 @@ ul.twPc-Arrange {
 
 </style>
 {% extends 'index.html' %}
-{% block title %}Following{% endblock %}
+{% block title %}Following({{ user.fullname }}){% endblock %}
 {% block tweetbox %}
 <div class="row" style="margin: 20px;">
 	{% for following_users in alreadyfollowing %}

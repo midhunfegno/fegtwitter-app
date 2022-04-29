@@ -24,6 +24,9 @@ class UserTweet(models.Model):
     """date field is set to store current date and time"""
     upload_date = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ['-upload_date']
+
 
 # class Follower(models.Model):
 #     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
