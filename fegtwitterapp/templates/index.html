@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
 {% load humanize %}
 {% block tweetbox %}
-
+{% block tweetbutton %}
 <div class="tweetBox">
-    <form method="post" action="{% url 'tweet_save' %}">
+    <form method="post" {% block action %}action="{% url 'tweet_save' %}"{% endblock %}>
         {% csrf_token %}
         <div class="tweetbox__input">
             <img src="https://i.pinimg.com/originals/a6/58/32/a65832155622ac173337874f02b218fb.png" alt="" />
-            <input type="text" id="tweetinput" name='text' placeholder="What's happening?"  />
+            {% block textvalue %}<input type="text" id="tweetinput" name='text' placeholder="What's happening?"  />{% endblock %}
         </div>
-        <button  class="tweetBox__tweetButton" type="Submit" >Submit</button>
+        <button  class="tweetBox__tweetButton" type="Submit" >{% block button %}Submit{% endblock %}</button>
     </form>
 </div>
+{% endblock %}
 <!-- post starts -->
 
 {% for p in tweets %}

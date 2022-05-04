@@ -1,17 +1,17 @@
 {% extends 'index.html' %}
-{% block tweetbox  %}
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+{% block tweetbutton %}
 <div class="tweetBox">
-    <form method="POST" >
+    <form method="post">
         {% csrf_token %}
         <div class="tweetbox__input">
             <img src="https://i.pinimg.com/originals/a6/58/32/a65832155622ac173337874f02b218fb.png" alt="" />
+            {% block textvalue %}
+<!--            <input type="text" id="tweetinput" name='text' placeholder="What's happening?"  />-->
             {{ form.text }}
+            {% endblock %}
         </div>
-        <button  class="tweetBox__tweetButton" type="Submit">Update</button>
+        <button  class="tweetBox__tweetButton" type="Submit" >{% block button %}Update{% endblock %}</button>
     </form>
 </div>
 {% endblock %}
+{% block widgets %}{% endblock %}

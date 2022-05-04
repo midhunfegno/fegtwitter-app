@@ -21,7 +21,10 @@ class User(AbstractUser):
 class UserTweet(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)
     text = models.CharField(max_length=100, blank=True, null=True)
-    """date field is set to store current date and time"""
+    """
+    date field is set to store current date and time
+    upload_date is created date of the user tweet
+    """
     upload_date = models.DateTimeField(auto_now=True)
 
     class Meta:
