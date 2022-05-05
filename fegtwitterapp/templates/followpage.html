@@ -100,38 +100,39 @@ ul.twPc-Arrange {
 }
 
 
+
 </style>
 
 
 <div class="row">
-	{% for recommended_user in follow_recommendations %}
-	<form>
-		<div class="twPc-div">
-			<a class="twPc-bg twPc-block"></a>
-			<div>
-				<div class="twPc-button">
-					<!--				<a href="#" class="twitter-follow-button" data-show-count="false" data-size="large" data-show-screen-name="false" data-dnt="true">Follow </a>-->
+    {% for recommended_user in follow_recommendations %}
+    <form>
+        <div class="twPc-div">
+            <a class="twPc-bg twPc-block"></a>
+            <div>
+                <div class="twPc-button">
+                    <!--				<a href="#" class="twitter-follow-button" data-show-count="false" data-size="large" data-show-screen-name="false" data-dnt="true">Follow </a>-->
 
-					<button type="submit" class="twitter-follow-button" data-id="{{recommended_user.id}}">Follow
-					</button>
-				</div>
-				<a title="Mert S. Kaplan" href="#" class="twPc-avatarLink">
-					<img alt="Mert S. Kaplan" src="https://randomuser.me/api/portraits/men/{{ forloop.counter }}.jpg"
-						 class="twPc-avatarImg">
-				</a>
-				<div class="twPc-divUser">
-					<div class="twPc-divName">
-						<a href="">{{ recommended_user.fullname|default:"Name" }}</a>
-					</div>
-					<span>
+                    <button type="submit" class="twitter-follow-button" data-id="{{recommended_user.id}}">Follow
+                    </button>
+                </div>
+                <a title="Mert S. Kaplan" href="#" class="twPc-avatarLink">
+                    <img alt="Mert S. Kaplan" src="https://randomuser.me/api/portraits/men/{{ forloop.counter }}.jpg"
+                         class="twPc-avatarImg">
+                </a>
+                <div class="twPc-divUser">
+                    <div class="twPc-divName">
+                        <a href="">{{ recommended_user.fullname|default:"Name" }}</a>
+                    </div>
+                    <span>
 				<a href="">@<span>{{ recommended_user.username }}</span></a>
 			</span>
-				</div>
-			</div>
-		</div>
-	</form>
-	{% endfor %}
-	<!-- code end -->
+                </div>
+            </div>
+        </div>
+    </form>
+    {% endfor %}
+    <!-- code end -->
 </div>
 <!--<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>-->
 <script type="text/javascript">
@@ -156,4 +157,5 @@ function myFunction(event){
 for(let i=0;i<elements.length;i++){
 	elements[i].addEventListener('click', myFunction )
 }
+
 </script>

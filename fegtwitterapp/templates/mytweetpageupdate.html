@@ -4,13 +4,13 @@
     <form method="post">
         {% csrf_token %}
         <div class="tweetbox__input">
-            <img src="https://i.pinimg.com/originals/a6/58/32/a65832155622ac173337874f02b218fb.png" alt="" />
+            <img src="https://i.pinimg.com/originals/a6/58/32/a65832155622ac173337874f02b218fb.png" alt=""/>
             {% block textvalue %}
-<!--            <input type="text" id="tweetinput" name='text' placeholder="What's happening?"  />-->
+            <!--            <input type="text" id="tweetinput" name='text' placeholder="What's happening?"  />-->
             {{ form.text }}
             {% endblock %}
         </div>
-        <button  class="tweetBox__tweetButton" type="Submit" >{% block button %}Update{% endblock %}</button>
+        <button class="tweetBox__tweetButton" type="Submit">{% block button %}Update{% endblock %}</button>
     </form>
 </div>
 {% endblock %}

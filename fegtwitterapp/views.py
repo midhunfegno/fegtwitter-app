@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.core.cache import cache
+from django.core.cache import cache, caches
 from django.http import HttpResponse
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
@@ -20,19 +20,65 @@ class HomePage(LoginRequiredMixin, ListView):
     model = UserTweet
     queryset = UserTweet.objects.all()
     template_name = "index.html"
+    paginate_by = 10
 
     def get_context_data(self, *args, **kwargs):
+        """
+        getting dictionary values from the tweetlist
+        ------------------------------------------------------------------------------------------------------
+        eg:
+        TweetList {'671_TWEET_ID': {'id': 671, 'user': <User: midhunmanoj>, 'text': 'ccccccccccccccccccccc',
+                        'upload_date': datetime.datetime(2022, 5, 4, 13, 0, 47, 870640, tzinfo=<UTC>)},.....]
+
+        final_result will be as follows
+        ------------------------------------------------------------------------------------------------------
+        final_result [{'id': 671, 'user': <User: midhunmanoj>, 'text': 'ccccccccccccccccccccc',
+         'upload_date': datetime.datetime(2022, 5, 4, 13, 0, 47, 870640, tzinfo=<UTC>)},....]
+        """
         context = super().get_context_data(*args, **kwargs)
         home_timeline_key = HOME_TIMELINE.format(self.request.user.username)
         home_timeline = cache.get(home_timeline_key)
-        print("user_timeline_key", home_timeline_key, home_timeline)
         result = []
+        final_result = []
+        redis_cache = caches.create_connection('default')
         if home_timeline is not None:
             new_timeline = sorted(home_timeline, reverse=True)
             for tweet_id in new_timeline:
-                result.append(cache.get(f'{tweet_id}_TWEET_ID'))
-        context['tweets'] = result
+                result.append(f'{tweet_id}_TWEET_ID')
+            """
+            Instead of cache.get we use cache.get_many() to reduce data access time from redis cache and with less code
+            """
+            page_size_limit = 10
+            result_length = len(result)
+            # remaining result number
+            endpage = int(result_length/page_size_limit)+2
+            # print(result_length, page_size_limit, endpage)
+            page = int(self.request.GET.get('page'))
+            if page is None:
+                page = 1
+            # for page in range(1, endpage):
+            final_result1 = []
+            start = ((page - 1) * page_size_limit)
+            end = page * page_size_limit
+            paginated_result = result[start:end]
+            print("paginated_result", paginated_result)
+            tweet_list1 = redis_cache.get_many(paginated_result)
+            for key, value in tweet_list1.items():
+                final_result1.append(value)
+                context['mytweets'] = final_result1
 
+            # context['tweets'] = final_result
+            # tweet_list = redis_cache.get_many(result)
+            # for key, value in tweet_list.items():
+            #     final_result.append(value)
+
+            """
+            code for sorting the obtained list
+            """
+            # sorted_tweet = sorted(final_result, key=lambda x: x['upload_date'], reverse=True)
+            # tweet_length = len(final_result)
+
+        context['tweets'] = final_result
         """
         code for obtaining non followers list
         """
@@ -133,18 +179,22 @@ class MyTweetListView(LoginRequiredMixin, ListView):
         # import pdb;pdb.set_trace()
         user_timeline = cache.get(user_timeline_key)
         myresult = []
+        myfinal_result = []
         """
         Sorting the result obtained
         """
+        redis_cache = caches.create_connection('default')
         if user_timeline is not None:
             new_timeline = sorted(user_timeline, reverse=True)
             for tweet_id in new_timeline:
-                myresult.append(cache.get(f'{tweet_id}_TWEET_ID'))
-        # final_result = sorted(myresult, key=lambda x: x['upload_date'], reverse=True)
-        context['mytweets'] = myresult
+                myresult.append(f'{tweet_id}_TWEET_ID')
+                tweet_list = redis_cache.get_many(myresult)
+                for key, value in tweet_list.items():
+                    myfinal_result.append(value)
+        context['mytweets'] = myfinal_result
 
         """       
-         Displaying non follower list
+        Displaying non follower list
         """
         Relation_table = User.followers.through
         alreadyfollowing = Relation_table.objects.filter(to_user=self.request.user).values_list('from_user')
@@ -184,11 +234,10 @@ class MyTweetUpdateView(LoginRequiredMixin, UpdateView):
         removing old data cache and updating new cache data 
         """
         follow_user = self.request.user.followers.all().values_list('username', flat=True)
+
         for followid in follow_user:
             follow_key = HOME_TIMELINE.format(followid)
             followtimeline = cache.get(follow_key)
-            # if followtimeline is None:
-            #     followtimeline = []
             for tid in followtimeline:
                 followtimeline.remove(tid)
                 followtimeline.append(post_instance.id)
@@ -215,7 +264,7 @@ class MyTweetDeleteView(DeleteView):
         userpost = cache.get(USER_TIMELINE.format(currentuser))
         userhomepost = cache.get(HOME_TIMELINE.format(currentuser))
         """
-         deleting tweet from user timeline
+        deleting tweet from user timeline
         """
         for pid in userpost:
             if pid == update_tweet_id:
@@ -225,7 +274,7 @@ class MyTweetDeleteView(DeleteView):
         """
         for pid in userhomepost:
             if pid == update_tweet_id:
-                userpost.remove(pid)
+                userhomepost.remove(pid)
         cache.delete(TWEET_CACHE.format(update_tweet_id))
         return super(MyTweetDeleteView, self).delete(request, *args)
 
