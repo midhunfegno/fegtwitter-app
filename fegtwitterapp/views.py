@@ -51,11 +51,11 @@ class HomePage(LoginRequiredMixin, ListView):
             page_size_limit = 10
             result_length = len(result)
             # remaining result number
-            endpage = int(result_length/page_size_limit)+2
+            # endpage = int(result_length/page_size_limit)+2
             # print(result_length, page_size_limit, endpage)
-            page = int(self.request.GET.get('page'))
-            if page is None:
-                page = 1
+
+            page = int(self.request.GET.get('page', '1'))
+
             # for page in range(1, endpage):
             final_result1 = []
             start = ((page - 1) * page_size_limit)
@@ -65,7 +65,7 @@ class HomePage(LoginRequiredMixin, ListView):
             tweet_list1 = redis_cache.get_many(paginated_result)
             for key, value in tweet_list1.items():
                 final_result1.append(value)
-                context['mytweets'] = final_result1
+            context['mytweets'] = final_result1
 
             # context['tweets'] = final_result
             # tweet_list = redis_cache.get_many(result)
@@ -78,7 +78,7 @@ class HomePage(LoginRequiredMixin, ListView):
             # sorted_tweet = sorted(final_result, key=lambda x: x['upload_date'], reverse=True)
             # tweet_length = len(final_result)
 
-        context['tweets'] = final_result
+        # context['tweets'] = final_result
         """
         code for obtaining non followers list
         """
