@@ -191,7 +191,7 @@ class MyTweetListView(LoginRequiredMixin, ListView):
                 tweet_list = redis_cache.get_many(myresult)
                 for key, value in tweet_list.items():
                     myfinal_result.append(value)
-        context['mytweets'] = myfinal_result
+        context['mytweetss'] = myfinal_result
 
         """       
         Displaying non follower list
@@ -309,3 +309,5 @@ def ajax_submission_unfollow(request):
         followerid = request.POST.get('element')
         User.objects.get(id=followerid).followers.remove(request.user.id)
         return HttpResponse("Ok")
+
+
