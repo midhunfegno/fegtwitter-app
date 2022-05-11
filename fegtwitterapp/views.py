@@ -161,11 +161,20 @@ class MyTweetListView(LoginRequiredMixin, ListView):
             new_timeline = sorted(user_timeline, reverse=True)
             for tweet_id in new_timeline:
                 myresult.append(f'{tweet_id}_TWEET_ID')
-                tweet_list = redis_cache.get_many(myresult)
-                for key, value in tweet_list.items():
-                    myfinal_result.append(value)
-        context['mytweetss'] = myfinal_result
-
+            """
+            Instead of cache.get we use cache.get_many() to reduce data access time from redis cache and with less code
+            """
+            page_size_limit = 10
+            page = int(self.request.GET.get('page', '1'))
+            myfinal_result = []
+            start = ((page - 1) * page_size_limit)
+            end = page * page_size_limit
+            paginated_result = myresult[start:end]
+            print("paginated_result", paginated_result)
+            tweet_list = redis_cache.get_many(paginated_result)
+            for key, value in tweet_list.items():
+                myfinal_result.append(value)
+            context['mytweetss'] = myfinal_result
         """       
         Displaying non follower list
         """
