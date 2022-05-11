@@ -1,9 +1,5 @@
-from pyexpat import model
-
 from django import forms
-from django.contrib.auth import authenticate
 from django.forms import ModelForm
-
 from fegtwitterapp.models import User, UserTweet
 
 
@@ -19,7 +15,8 @@ class RegistrationForm(ModelForm):
 
 
 class PostForm(forms.ModelForm):
-    text = forms.CharField(widget=forms.TextInput(attrs={'class': 'tweetBox', 'id': 'tweetinput',  "placeholder": "What's happening?" }))
+    text = forms.CharField(widget=forms.TextInput(attrs={'class': 'tweetBox', 'id': 'tweetinput',
+                                                         "placeholder": "What's happening?"}))
 
     class Meta:
         model = UserTweet
@@ -30,7 +27,3 @@ class UpdatePostForm(forms.ModelForm):
     class Meta:
         model = UserTweet
         fields = ['text']
-
-    # def save(self, commit=True):
-    #     self.instance.username = self.request.user
-    #     return super(PostForm, self).save(commit=commit)

@@ -39,7 +39,6 @@ class HomePage(LoginRequiredMixin, ListView):
         home_timeline_key = HOME_TIMELINE.format(self.request.user.username)
         home_timeline = cache.get(home_timeline_key)
         result = []
-        final_result = []
         redis_cache = caches.create_connection('default')
         if home_timeline is not None:
             new_timeline = sorted(home_timeline, reverse=True)
@@ -49,14 +48,7 @@ class HomePage(LoginRequiredMixin, ListView):
             Instead of cache.get we use cache.get_many() to reduce data access time from redis cache and with less code
             """
             page_size_limit = 10
-            result_length = len(result)
-            # remaining result number
-            # endpage = int(result_length/page_size_limit)+2
-            # print(result_length, page_size_limit, endpage)
-
             page = int(self.request.GET.get('page', '1'))
-
-            # for page in range(1, endpage):
             final_result1 = []
             start = ((page - 1) * page_size_limit)
             end = page * page_size_limit
@@ -67,18 +59,6 @@ class HomePage(LoginRequiredMixin, ListView):
                 final_result1.append(value)
             context['mytweets'] = final_result1
 
-            # context['tweets'] = final_result
-            # tweet_list = redis_cache.get_many(result)
-            # for key, value in tweet_list.items():
-            #     final_result.append(value)
-
-            """
-            code for sorting the obtained list
-            """
-            # sorted_tweet = sorted(final_result, key=lambda x: x['upload_date'], reverse=True)
-            # tweet_length = len(final_result)
-
-        # context['tweets'] = final_result
         """
         code for obtaining non followers list
         """
@@ -131,7 +111,6 @@ class UserTweetCreateView(LoginRequiredMixin, CreateView):
         homeuser_follow_timeline = cache.get(homeuser_key, default=[])
         homeuser_follow_timeline.append(post_instance.id)
         cache.set(homeuser_key, homeuser_follow_timeline)
-        # print("Home Timeline cache", follow_user, cache.get(homeuser_key))
         """             
         setting up cache for user timeline (contains only my posts)
         """
@@ -155,11 +134,6 @@ class UserTweetCreateView(LoginRequiredMixin, CreateView):
 
         return super(UserTweetCreateView, self).form_valid(form=form)
 
-        # redis_cache = caches.create_connection('default')
-        # redis_cache.get_many(['follow_id1', 'follow_id2', 'follow_id3'])
-        # redis_cache.get_many(['follow_id1', 'follow_id2', 'follow_id3'])
-        # redis_cache.set_many()
-
     def form_invalid(self, form):
         messages.error(self.request, "There are some errors in the form! Please correct the errors and resubmit")
         return super(UserTweetCreateView, self).form_invalid(form=form)
@@ -176,7 +150,6 @@ class MyTweetListView(LoginRequiredMixin, ListView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         user_timeline_key = USER_TIMELINE.format(self.request.user.username)
-        # import pdb;pdb.set_trace()
         user_timeline = cache.get(user_timeline_key)
         myresult = []
         myfinal_result = []
@@ -309,5 +282,3 @@ def ajax_submission_unfollow(request):
         followerid = request.POST.get('element')
         User.objects.get(id=followerid).followers.remove(request.user.id)
         return HttpResponse("Ok")
-
-

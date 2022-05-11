@@ -16,15 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from fegtwitterapp.api.router import router
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('fegtwitterapp.urls')),
     path('', include('fegtwitterapp.api.urls')),
     path('__debug__/', include('debug_toolbar.urls')),
     path('api-auth/', include('rest_framework.urls')),
-    path('api/', include(router.urls)),
-
     # path('accounts/', include('django.contrib.auth.urls')),
 ]
