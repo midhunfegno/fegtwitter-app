@@ -184,7 +184,7 @@ REST_FRAMEWORK = {
     ]
 }
 
-ALLOWED_HOSTS = ['ec2-65-1-222-56.ap-south-1.compute.amazonaws.com']
+ALLOWED_HOSTS = ['ec2-65-1-222-56.ap-south-1.compute.amazonaws.com', 'localhost', '0.0.0.0']
 
 # INTERNAL_IPS = ("127.0.0.1", "172.17.0.1")
 
