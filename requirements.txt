@@ -22,6 +22,7 @@ decorator==5.1.1
 defusedxml==0.7.1
 Django==3.2.13
 django-debug-toolbar==3.2.4
+django-environ==0.8.1
 django-extensions==3.1.5
 django-filter==21.1
 django-redis-cache==3.0.1
@@ -30,6 +31,7 @@ dnspython==2.2.1
 ecdsa==0.17.0
 email-validator==1.2.1
 emails==0.5.15
+environ==1.0
 Faker==13.4.0
 fastapi==0.70.1
 follow==0.3
@@ -68,6 +70,7 @@ pyparsing==3.0.8
 PySocks==1.7.1
 pytest==5.4.3
 python-dateutil==2.8.2
+python-dotenv==0.20.0
 python-jose==3.3.0
 python-multipart==0.0.5
 pytz==2022.1
