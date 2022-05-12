@@ -36,7 +36,7 @@ SECRET_KEY = os.getenv('DEBUG')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG')
 
-ALLOWED_HOSTS = []
+
 # ALLOWED_HOSTS = ['example.com','127.0.0.1']
 
 # Application definition
@@ -141,6 +141,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+# STATIC_URL = 'assets/'
+# STATICFILES_DIRS = [ BASE_DIR / "public" / "assets", ]
+# STATIC_ROOT = os.path.join(BASE_DIR, 'public', 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -181,6 +184,8 @@ REST_FRAMEWORK = {
     ]
 }
 
+ALLOWED_HOSTS = ['ec2-65-1-222-56.ap-south-1.compute.amazonaws.com']
+
 # INTERNAL_IPS = ("127.0.0.1", "172.17.0.1")
 
 # STATIC_URL = 'assets/'
@@ -189,3 +194,4 @@ REST_FRAMEWORK = {
 
 # MEDIA_URL = 'src/'
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'public', 'media')
+
