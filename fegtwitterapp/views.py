@@ -64,8 +64,7 @@ class HomePage(LoginRequiredMixin, ListView):
         """
         Relation_table = User.followers.through
         alreadyfollowing = Relation_table.objects.filter(to_user=self.request.user).values_list('from_user')
-        context['follow_recommendations'] = User.objects.exclude(id__in=alreadyfollowing,
-                                                                 id=self.request.user.id).order_by('?')[:8]
+        context['follow_recommendations'] = User.objects.exclude(id__in=alreadyfollowing).exclude(id=self.request.user.id).order_by('?')[:8]
         return context
 
 
