@@ -184,14 +184,7 @@ REST_FRAMEWORK = {
     ]
 }
 
-ALLOWED_HOSTS = ['ec2-65-1-222-56.ap-south-1.compute.amazonaws.com', 'localhost', '0.0.0.0', '127.0.0.1']
+ALLOWED_HOSTS = ['ec2-65-1-222-56.ap-south-1.compute.amazonaws.com', 'localhost', '0.0.0.0', '127.0.0.1',
+                 'www.fegtwitter.com', 'fegtwitter.com']
 
-# INTERNAL_IPS = ("127.0.0.1", "172.17.0.1")
-
-# STATIC_URL = 'assets/'
-# STATICFILES_DIRS = [ BASE_DIR / "public" / "assets", ]
-# STATIC_ROOT = os.path.join(BASE_DIR, 'public', 'static')
-
-# MEDIA_URL = 'src/'
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'public', 'media')
 

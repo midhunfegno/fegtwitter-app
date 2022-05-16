@@ -28,7 +28,9 @@ body {
   box-shadow: 0 15px 25px rgba(0,0,0,.6);
   border-radius: 10px;
 }
-
+form{
+color:white;
+}
 .login-box h2 {
   margin: 0 0 30px;
   padding: 0;
@@ -43,7 +45,8 @@ body {
 .login-box .user-box input {
   width: 100%;
   padding: 10px 0;
-  font-size: 16px;
+  font-size: 18px;
+  font-weight: bold;
   color: #e6ecf0;
   margin-bottom: 30px;
   border: none;
@@ -67,7 +70,7 @@ body {
   top: -20px;
   left: 0;
   color: #50b7f5;
-  font-size: 12px;
+  font-size: 16px;
 }
 
 .login-box form button {
@@ -178,7 +181,6 @@ body {
 }
 </style>
 <body>
-<!--<h1 align="center">{% block header %}Login Page{% endblock %}</h1>-->
 
 <div class="login-box">
     {% block loginpage %}
@@ -192,8 +194,8 @@ body {
             {{ data }}
         </div>
         {% endfor %}
-        {% if form.error %}
-            This should pop up if there is an error
+        {% if form.errors %}
+            Invalid username or password
         {% endif %}
         <button href="#" type="Submit">
             <span></span>

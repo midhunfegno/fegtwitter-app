@@ -2,7 +2,6 @@
 {% load humanize %}
 {% block title %}My tweets({{ user.fullname }}){% endblock %}
 {% block tweetbox %}
-
 {% for p in mytweetss %}
 {% if p.id %}
 <div class="post">
@@ -36,7 +35,6 @@
                 <p>{{ p.text }}</p>
             </div>
         </div>
-        <!--        <img src="https://www.focus2move.com/wp-content/uploads/2020/01/Tesla-Roadster-2020-1024-03.jpg" alt="" />-->
         <div class="post__footer">
             <span class="material-icons "> favorite_border </span>
             <span class="material-icons "> repeat </span>
@@ -46,7 +44,6 @@
 </div>
 {% endif %}
 {% endfor %}
-
 <nav aria-label="..." align="center">
     <ul class="pagination  pagination-lg">
         {% if page_obj.has_previous %}
@@ -63,12 +60,10 @@
     </ul>
 </nav>
 <!-- post ends -->
-
 {% endblock %}
 {% block widgets %}
 <div class="widgets__widgetContainer">
     <h2>You might like</h2>
     {% include 'followpage.html' %}
 </div>
-
 {% endblock %}

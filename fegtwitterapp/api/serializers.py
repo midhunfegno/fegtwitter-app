@@ -24,10 +24,3 @@ class HomeTweetSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserTweet
         fields = ['id', 'user', 'text', 'upload_date']
-
-
-# class UserTweetSerializer(serializers.ModelSerializer):
-#     users = HomeTweetSerializer(many=True)
-#     class Meta:
-#         model = UserTweet
-#         fields = ['id', 'user', 'text', 'upload_date','users']

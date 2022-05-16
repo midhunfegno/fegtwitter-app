@@ -153,7 +153,6 @@ class MyTweetListView(LoginRequiredMixin, ListView):
         user_timeline_key = USER_TIMELINE.format(self.request.user.username)
         user_timeline = cache.get(user_timeline_key)
         myresult = []
-        myfinal_result = []
         """
         Sorting the result obtained
         """
@@ -233,7 +232,7 @@ class MyTweetUpdateView(LoginRequiredMixin, UpdateView):
         return reverse('my_tweets')
 
 
-class MyTweetDeleteView(DeleteView):
+class MyTweetDeleteView(LoginRequiredMixin, DeleteView):
     model = UserTweet
     template_name = "mytweetpage.html"
     success_url = '/mytweet'
@@ -270,7 +269,7 @@ def ajax_submission(request):
     return HttpResponse("Ok")
 
 
-class MyFollowersListView(ListView):
+class MyFollowersListView(LoginRequiredMixin, ListView):
     model = User
     template_name = "followingpage.html"
 

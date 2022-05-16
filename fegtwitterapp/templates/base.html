@@ -264,8 +264,6 @@ a, a:visited, a:hover, a:active {
   font-weight: 800;
 }
 
-
-
     </style>
 </head>
 
@@ -278,11 +276,6 @@ a, a:visited, a:hover, a:active {
         <a href="{% url  'homepage' %}"><h2>Home</h2></a>
     </div>
 
-<!--    <div class="sidebarOption">-->
-<!--        <span class="material-icons"> search </span>-->
-<!--        <h2>Explore</h2>-->
-<!--    </div>-->
-
     <div class="sidebarOption">
         <span class="material-icons"> list_alt </span>
         <a href="{% url  'following_users' %}"><h2>Following</h2></a>
@@ -292,31 +285,7 @@ a, a:visited, a:hover, a:active {
         <span class="material-icons"> mail_outline </span>
         <a href="{% url  'my_tweets' %}"><h2>My Tweets</h2></a>
     </div>
-
-<!--    <div class="sidebarOption">-->
-<!--        <span class="material-icons"> bookmark_border </span>-->
-<!--        <h2>Bookmarks</h2>-->
-<!--    </div>-->
-
-<!--    <div class="sidebarOption">-->
-<!--        <span class="material-icons"> notifications_none </span>-->
-<!--        <h2>Lists</h2>-->
-<!--    </div>-->
-
-<!--    <div class="sidebarOption">-->
-<!--        <span class="material-icons"> perm_identity </span>-->
-<!--        <h2>Profile</h2>-->
-<!--    </div>-->
-    <div class="sidebarOption">
-        <span class="material-icons"> perm_identity </span>
-        <a href="{% url  'logout_view' %}" ><h2>Logout</h2></a>
-    </div>
-
-    <!--      <div class="sidebarOption">-->
-    <!--        <span class="material-icons"> more_horiz </span>-->
-    <!--        <h2>More</h2>-->
-    <!--      </div>-->
-    <a href="{% url  'homepage' %}"><button class="sidebar__tweet" >Tweet</button></a>
+    <a href="{% url  'logout_view' %}" ><button class="sidebar__tweet" >Logout</button></a>
 </div>
 <!-- sidebar ends -->
 
@@ -337,10 +306,6 @@ a, a:visited, a:hover, a:active {
 <!-- widgets starts -->
 
 <div class="widgets">
-    <div class="widgets__input">
-        <span class="material-icons widgets__searchIcon"> search </span>
-        <input type="text" placeholder="Search Twitter"/>
-    </div>
     {% block widgets %}
     <div class="widgets__widgetContainer">
         <h2>What's happening?</h2>
@@ -364,7 +329,6 @@ a, a:visited, a:hover, a:active {
         <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     </div>
     {% endblock %}
-
 </div>
 
 <!-- widgets ends -->
