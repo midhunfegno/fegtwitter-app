@@ -17,7 +17,8 @@ class User(AbstractUser):
 
 
 class UserTweet(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True,
+                             related_name='tweetusers')
     text = models.CharField(max_length=100, blank=True, null=True)
     """
     date field is set to store current date and time

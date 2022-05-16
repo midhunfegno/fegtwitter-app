@@ -63,10 +63,9 @@ class HomePage(LoginRequiredMixin, ListView):
         code for obtaining non followers list
         """
         Relation_table = User.followers.through
-        # alreadyfollowing = Relation_table.objects.filter(to_user=self.request.user).values_list('from_user',flat=True)
-        alreadyfollowing = self.request.user.followers.all().values_list('id', flat=True)
-        print(alreadyfollowing)
-        context['follow_recommendations'] = User.objects.exclude(id__in=alreadyfollowing).order_by('?')[:8]
+        alreadyfollowing = Relation_table.objects.filter(to_user=self.request.user).values_list('from_user', flat=True)
+        context['follow_recommendations'] = User.objects.exclude(id__in=alreadyfollowing).order_by('?')[:12]
+        print(context['follow_recommendations'])
         return context
 
 
@@ -182,7 +181,7 @@ class MyTweetListView(LoginRequiredMixin, ListView):
         """
         Relation_table = User.followers.through
         alreadyfollowing = Relation_table.objects.filter(to_user=self.request.user).values_list('from_user')
-        context['follow_recommendations'] = User.objects.exclude(id__in=alreadyfollowing).order_by('?')[:8]
+        context['follow_recommendations'] = User.objects.exclude(id__in=alreadyfollowing).order_by('?')[:12]
         return context
 
 

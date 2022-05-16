@@ -3,14 +3,14 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from fegtwitterapp.api.serializers import UserTweetSerializer, UserRegisterSerializer
+from fegtwitterapp.api.serializers import UserRegisterSerializer, HomeTweetSerializer
 from fegtwitterapp.models import UserTweet
 from rest_framework import status, generics
 
 
 class HomeTweetGenericListView(generics.ListCreateAPIView):
     queryset = UserTweet.objects.all()
-    serializer_class = UserTweetSerializer
+    serializer_class = HomeTweetSerializer
 
     def list(self, request, *args, **kwargs):
         currentuser = list(self.request.user.followers.all())
@@ -26,7 +26,7 @@ class HomeTweetGenericListView(generics.ListCreateAPIView):
 
     def create(self, request, *args, **kwargs):
         print("TweetCreate", request.data)
-        serializer = UserTweetSerializer(data=request.data)
+        serializer = HomeTweetSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -35,7 +35,7 @@ class HomeTweetGenericListView(generics.ListCreateAPIView):
 
 class UserTweetGenericListView(generics.ListCreateAPIView):
     queryset = UserTweet.objects.all()
-    serializer_class = UserTweetSerializer
+    serializer_class = HomeTweetSerializer
 
     def list(self, request, *args, **kwargs):
         currentuser = self.request.user
@@ -79,4 +79,4 @@ class UserHomepageApiView(APIView):
 
 class TweetDetailGenericView(generics.RetrieveUpdateDestroyAPIView):
     queryset = UserTweet.objects.all()
-    serializer_class = UserTweetSerializer
+    serializer_class = HomeTweetSerializer

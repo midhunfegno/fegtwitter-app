@@ -10,10 +10,24 @@ User = get_user_model()
 class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'fullname', 'email', 'username', 'password']
+        fields = ['id', 'fullname', 'email', 'username']
 
 
-class UserTweetSerializer(serializers.ModelSerializer):
+class HomeTweetSerializer(serializers.ModelSerializer):
+
+    user = serializers.SerializerMethodField()
+
+    def get_user(self, instance):
+        queryset = User.objects.filter(id=instance.user_id)
+        return UserRegisterSerializer(queryset, many=True, read_only=True).data
+
     class Meta:
         model = UserTweet
         fields = ['id', 'user', 'text', 'upload_date']
+
+
+# class UserTweetSerializer(serializers.ModelSerializer):
+#     users = HomeTweetSerializer(many=True)
+#     class Meta:
+#         model = UserTweet
+#         fields = ['id', 'user', 'text', 'upload_date','users']
