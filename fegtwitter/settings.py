@@ -184,6 +184,6 @@ REST_FRAMEWORK = {
     ]
 }
 
-ALLOWED_HOSTS = ['65.1.222.56']
+ALLOWED_HOSTS = ['www.fegtwitter.com', 'fegtwitter.com']
 
 
