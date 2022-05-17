@@ -184,6 +184,8 @@ REST_FRAMEWORK = {
     ]
 }
 
-ALLOWED_HOSTS = ['www.fegtwitter.com', 'fegtwitter.com']
+ALLOWED_HOSTS = ['fegtwitter.midhun-internship.fegno.com', 'localhost']
+
+
 
 
