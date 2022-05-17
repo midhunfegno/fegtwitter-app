@@ -184,7 +184,6 @@ REST_FRAMEWORK = {
     ]
 }
 
-ALLOWED_HOSTS = ['ec2-65-1-222-56.ap-south-1.compute.amazonaws.com', 'localhost', '0.0.0.0', '127.0.0.1',
-                 'www.fegtwitter.com', 'fegtwitter.com']
+ALLOWED_HOSTS = ['65.1.222.56']
 
 
