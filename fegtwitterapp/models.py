@@ -5,7 +5,7 @@ from django.db import models
 
 
 class User(AbstractUser):
-    followers = models.ManyToManyField('self', blank=True, null=True, related_name='following')
+    followers = models.ManyToManyField('self', blank=True, related_name='following')
     fullname = models.CharField(max_length=100, blank=True, null=True)
     email = models.EmailField(unique=True, null=True, blank=True)
     follower_count = models.IntegerField(default=0, blank=True, null=True)
