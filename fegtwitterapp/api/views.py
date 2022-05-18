@@ -80,3 +80,6 @@ class UserHomepageApiView(APIView):
 class TweetDetailGenericView(generics.RetrieveUpdateDestroyAPIView):
     queryset = UserTweet.objects.all()
     serializer_class = HomeTweetSerializer
+
+
+
