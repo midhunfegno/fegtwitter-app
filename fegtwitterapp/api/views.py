@@ -25,7 +25,7 @@ class HomeTweetGenericListView(generics.ListCreateAPIView):
         return Response(serializer.data)
 
 
-class UserTweetGenericListView(generics.ListCreateAPIView):
+class UserTweetGenericListView(generics.ListAPIView):
     queryset = UserTweet.objects.all()
     serializer_class = HomeTweetSerializer
 
