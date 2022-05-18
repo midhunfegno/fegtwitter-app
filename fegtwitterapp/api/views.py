@@ -1,14 +1,18 @@
+import json
+
 from rest_framework.authtoken.models import Token
+from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
 from fegtwitterapp.api.serializers import UserRegisterSerializer, HomeTweetSerializer, UserTweetPostSerializer
 from fegtwitterapp.models import UserTweet
-from rest_framework import status, generics
+from rest_framework import status, generics, viewsets
 
 
-class HomeTweetGenericListView(generics.ListCreateAPIView):
+class HomeTweetGenericListView(generics.ListAPIView):
     queryset = UserTweet.objects.all()
     serializer_class = HomeTweetSerializer
 
@@ -61,20 +65,6 @@ class UserRegistrationApiView(APIView):
         return Response(data)
 
 
-class UserTweetPostApiView(APIView):
-    def post(self, request):
-        print("TweetCreate", request.data)
-        serializer = UserTweetPostSerializer(data=request.data)
-        data = {}
-        if serializer.is_valid():
-            postdata=serializer.save()
-            data['text'] = postdata.text
-            data['user'] = self.request.user
-        else:
-            data = serializer.errors
-        return Response(data)
-
-
 class UserHomepageApiView(APIView):
     permission_classes = [IsAuthenticated, ]
 
@@ -88,6 +78,40 @@ class TweetDetailGenericView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = HomeTweetSerializer
 
 
+class PostTweetViewSet(viewsets.ViewSet):
+    """
+        {
+        "text":"asdfsadf"
+        }
+    """
+
+    queryset = UserTweet.objects.all()
+
+    def create(self, request):
+        print("TweetCreate", request.data)
+        serializer = UserTweetPostSerializer(data=request.data)
+        data = {}
+        if serializer.is_valid():
+            postdata = serializer.save()
+            postdata.user = request.user
+            data['response'] = "Successfully Tweeted"
+            data['id'] = postdata.id
+            data['text'] = postdata.text
+            data['user'] = request.user.id
+            data['upload_date'] = postdata.upload_date
+            postdata.save()
+            # data = postdata
+            print(data,postdata.user)
+        else:
+            data = serializer.errors
+        return Response(data)
 
 
-
+@api_view(['GET'])
+def api_root(request, format=None):
+    return Response({
+        'user-homepage': reverse('user_homepage', request=request, format=format),
+        'homepage tweets': reverse('hometweets', request=request, format=format),
+        'user tweets': reverse('usertweets', request=request, format=format),
+        'post tweets': reverse('post-tweets', request=request, format=format),
+    })
