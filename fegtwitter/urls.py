@@ -19,7 +19,7 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('fegtwitterapp.urls')),
-    path('api/', include('fegtwitterapp.api.urls')),
+    path('', include('fegtwitterapp.api.urls')),
     path('__debug__/', include('debug_toolbar.urls')),
     path('api-auth/', include('rest_framework.urls')),
 ]
