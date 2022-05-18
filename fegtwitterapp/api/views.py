@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from fegtwitterapp.api.serializers import UserRegisterSerializer, HomeTweetSerializer
+from fegtwitterapp.api.serializers import UserRegisterSerializer, HomeTweetSerializer, UserTweetPostSerializer
 from fegtwitterapp.models import UserTweet
 from rest_framework import status, generics
 
@@ -23,14 +23,6 @@ class HomeTweetGenericListView(generics.ListCreateAPIView):
             return self.get_paginated_response(serializer.data)
         serializer = self.get_serializer(usertweet, many=True)
         return Response(serializer.data)
-
-    def create(self, request, *args, **kwargs):
-        print("TweetCreate", request.data)
-        serializer = HomeTweetSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserTweetGenericListView(generics.ListCreateAPIView):
@@ -69,6 +61,20 @@ class UserRegistrationApiView(APIView):
         return Response(data)
 
 
+class UserTweetPostApiView(APIView):
+    def post(self, request):
+        print("TweetCreate", request.data)
+        serializer = UserTweetPostSerializer(data=request.data)
+        data = {}
+        if serializer.is_valid():
+            postdata=serializer.save()
+            data['text'] = postdata.text
+            data['user'] = self.request.user
+        else:
+            data = serializer.errors
+        return Response(data)
+
+
 class UserHomepageApiView(APIView):
     permission_classes = [IsAuthenticated, ]
 
@@ -80,6 +86,8 @@ class UserHomepageApiView(APIView):
 class TweetDetailGenericView(generics.RetrieveUpdateDestroyAPIView):
     queryset = UserTweet.objects.all()
     serializer_class = HomeTweetSerializer
+
+
 
 
 

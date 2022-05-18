@@ -24,3 +24,9 @@ class HomeTweetSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserTweet
         fields = ['id', 'user', 'text', 'upload_date']
+
+
+class UserTweetPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserTweet
+        fields = ['id', 'user', 'text', 'upload_date']

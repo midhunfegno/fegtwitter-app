@@ -53,7 +53,7 @@ class HomePage(LoginRequiredMixin, ListView):
             start = ((page - 1) * page_size_limit)
             end = page * page_size_limit
             paginated_result = result[start:end]
-            print("paginated_result", paginated_result)
+            # print("paginated_result", paginated_result)
             tweet_list1 = redis_cache.get_many(paginated_result)
             for key, value in tweet_list1.items():
                 final_result1.append(value)
@@ -65,7 +65,6 @@ class HomePage(LoginRequiredMixin, ListView):
         Relation_table = User.followers.through
         alreadyfollowing = Relation_table.objects.filter(to_user=self.request.user).values_list('from_user', flat=True)
         context['follow_recommendations'] = User.objects.exclude(id__in=alreadyfollowing).order_by('?')[:12]
-        print(context)
         return context
 
 
@@ -119,7 +118,7 @@ class UserTweetCreateView(LoginRequiredMixin, CreateView):
         user_follow_timeline = cache.get(user_key, default=[])
         user_follow_timeline.append(post_instance.id)
         cache.set(user_key, user_follow_timeline)
-        print("User Timeline cache", cache.get(user_key))
+        # print("User Timeline cache", cache.get(user_key))
         """ 
         setting cache for following users (appends each post to followers hometimeline)
         """
@@ -131,7 +130,7 @@ class UserTweetCreateView(LoginRequiredMixin, CreateView):
                 followtimeline = []
             followtimeline.append(post_instance.id)
             cache.set(follow_key, followtimeline)
-            print("current follow cache", followtimeline, follow_key)
+            # print("current follow cache", followtimeline, follow_key)
 
         return super(UserTweetCreateView, self).form_valid(form=form)
 
@@ -170,7 +169,7 @@ class MyTweetListView(LoginRequiredMixin, ListView):
             start = ((page - 1) * page_size_limit)
             end = page * page_size_limit
             paginated_result = myresult[start:end]
-            print("paginated_result", paginated_result)
+            # print("paginated_result", paginated_result)
             tweet_list = redis_cache.get_many(paginated_result)
             for key, value in tweet_list.items():
                 myfinal_result.append(value)
@@ -195,7 +194,7 @@ class MyTweetUpdateView(LoginRequiredMixin, UpdateView):
         post_instance = form.instance
 
         old_tweet_id = self.kwargs.get('pk')
-        print("old_tweet id", old_tweet_id)
+        # print("old_tweet id", old_tweet_id)
         """
         deleting the existing post
         """
@@ -204,14 +203,14 @@ class MyTweetUpdateView(LoginRequiredMixin, UpdateView):
         setting up cache for updating tweets    
         """
         update_tweet_key = TWEET_CACHE.format(post_instance.id)
-        print("update_tweet id", update_tweet_key)
+        # print("update_tweet id", update_tweet_key)
         cache.set(update_tweet_key, {
             "id": post_instance.id,
             "user": post_instance.user,
             "text": post_instance.text,
             "upload_date": post_instance.upload_date
         })
-        print("update cache:", cache.get(update_tweet_key))
+        # print("update cache:", cache.get(update_tweet_key))
         """
         removing old data cache and updating new cache data 
         """
@@ -224,8 +223,8 @@ class MyTweetUpdateView(LoginRequiredMixin, UpdateView):
                 followtimeline.remove(tid)
                 followtimeline.append(post_instance.id)
             cache.set(follow_key, followtimeline)
-            print("current follow cache", followtimeline, follow_key, cache.get(follow_key))
-        print("update cache:", cache.get(update_tweet_key))
+            # print("current follow cache", followtimeline, follow_key, cache.get(follow_key))
+        # print("update cache:", cache.get(update_tweet_key))
         return super(MyTweetUpdateView, self).form_valid(form=form)
 
     def get_success_url(self):

@@ -184,8 +184,7 @@ REST_FRAMEWORK = {
     ]
 }
 
-ALLOWED_HOSTS = ['fegtwitter.midhun-internship.fegno.com',
-                 'https://fegtwitter.midhun-internship.fegno.com', 'localhost']
+ALLOWED_HOSTS = ['fegtwitter.midhun-internship.fegno.com', 'localhost']
 
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_SECONDS = 60
